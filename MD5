@@ -1,7 +1,7 @@
-6e0986707987fad7b359cf9fbbb52fa0 *DESCRIPTION
+18025fda839231c2bb88eb08e089db12 *DESCRIPTION
 365ba699194b55db5c011186d3491df0 *LICENSE
 759639bb766d736ecd75bba7c6e2a455 *NAMESPACE
-6bc8ea59b165c145e6fd85b7de5b7d14 *NEWS.md
+83362b37db74065721405576bd6138ba *NEWS.md
 e6b195374910f481ce4eafa186c77196 *R/bagit.R
 c71e5d89b7e2cfb41bf3722185c90a89 *R/content_dir.R
 532ca7cd822fd2a42a80723c89c2c7ae *R/content_id.R
@@ -17,7 +17,7 @@ ce6dd139b94b8552af63ad3469c18bd3 *R/hash-archive.R
 c8b5f20e6eec715482bd31cb9dd29bbc *R/resolve.R
 78066fd6a3ee9f15aaec49f7ddadc259 *R/retrieve.R
 37134276935fb9672e5557d0ae81e267 *R/software-heritage.R
-cc7d5dcdc87c16f62bb926d9993909bd *R/store.R
+ce6a4439f43915a18d77d944c926e44d *R/store.R
 b8715c30ea92cbe56520e8efdca2220e *R/tsv_registry.R
 2c6206f9513efedea8d6ed257c4ecce8 *R/utils.R
 03c2a2d1bf4ad15a5bc20394cf285269 *README.md
@@ -42,7 +42,7 @@ c568a14b6bc6d403f4fae8302c23dc01 *man/register.Rd
 98818b7feb558249142d592f8d5ef7f1 *man/retrieve.Rd
 e7faad1ae3fc18215047d31312a86abf *man/retrieve_swh.Rd
 8727cb3257f06a8c304f3f143ce7fce2 *man/sources_swh.Rd
-bd9d329b40cdcad8603ac69620fe1010 *man/store.Rd
+65eea3574f85295e8d05eba1654fbba5 *man/store.Rd
 580425cbb86b9f9ea70fbc9446cef716 *man/store_swh.Rd
 0622a97a2aaa3c342f09636052c2d7f5 *tests/spelling.R
 1c36f99944f8dc17eb2f4b5708a20f55 *tests/testthat.R
@@ -50,7 +50,7 @@ bd9d329b40cdcad8603ac69620fe1010 *man/store.Rd
 5591cbfce4478b6cb66013b87fadd6c7 *tests/testthat/teardown-all.R
 8df426352429bd4554d43d0dad86451d *tests/testthat/test-content_id.R
 fdc82b61c051303d1e4dad7686625b1f *tests/testthat/test-format_identifiers.R
-38ddc868856cdd4c0d7d438ecb90294c *tests/testthat/test-lmdb_registry.R
+f005cec443e9eb88cccdf4d989a97561 *tests/testthat/test-lmdb_registry.R
 729016ec9a7377b9400fd258adfe05b6 *tests/testthat/test-multihash.R
 3dfb1968263c1ef43351a815c40533cb *tests/testthat/test-pin.R
 18135d3264bc5790f9988178a2143719 *tests/testthat/test-register-query.R
