@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+
+
+<title>Introduction to contentid</title>
+
+<script>// Hide empty <a> tag within highlighted CodeBlock for screen reader accessibility (see https://github.com/jgm/pandoc/issues/6352#issuecomment-626106786) -->
+// v0.0.1
+// Written by JooYoung Seo (jooyoung@psu.edu) and Atsushi Yasumoto on June 1st, 2020.
+
+document.addEventListener('DOMContentLoaded', function() {
+  const codeList = document.getElementsByClassName("sourceCode");
+  for (var i = 0; i < codeList.length; i++) {
+    var linkList = codeList[i].getElementsByTagName('a');
+    for (var j = 0; j < linkList.length; j++) {
+      if (linkList[j].innerHTML === "") {
+        linkList[j].setAttribute('aria-hidden', 'true');
+      }
+    }
+  }
+});
+</script>
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Introduction to <code>contentid</code></h1>
+
+
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+<div id="contentid" class="section level1">
+<h1>contentid</h1>
+<!-- badges: start -->
+<p><a href="https://www.tidyverse.org/lifecycle/#experimental"><img src="data:image/svg+xml;charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB3aWR0aD0iMTM4IiBoZWlnaHQ9IjIwIiByb2xlPSJpbWciIGFyaWEtbGFiZWw9ImxpZmVjeWNsZTogZXhwZXJpbWVudGFsIj48dGl0bGU+bGlmZWN5Y2xlOiBleHBlcmltZW50YWw8L3RpdGxlPjxsaW5lYXJHcmFkaWVudCBpZD0icyIgeDI9IjAiIHkyPSIxMDAlIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNiYmIiIHN0b3Atb3BhY2l0eT0iLjEiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz48L2xpbmVhckdyYWRpZW50PjxjbGlwUGF0aCBpZD0iciI+PHJlY3Qgd2lkdGg9IjEzOCIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz48L2NsaXBQYXRoPjxnIGNsaXAtcGF0aD0idXJsKCNyKSI+PHJlY3Qgd2lkdGg9IjU1IiBoZWlnaHQ9IjIwIiBmaWxsPSIjNTU1Ii8+PHJlY3QgeD0iNTUiIHdpZHRoPSI4MyIgaGVpZ2h0PSIyMCIgZmlsbD0iI2ZlN2QzNyIvPjxyZWN0IHdpZHRoPSIxMzgiIGhlaWdodD0iMjAiIGZpbGw9InVybCgjcykiLz48L2c+PGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZm9udC1mYW1pbHk9IlZlcmRhbmEsR2VuZXZhLERlamFWdSBTYW5zLHNhbnMtc2VyaWYiIHRleHQtcmVuZGVyaW5nPSJnZW9tZXRyaWNQcmVjaXNpb24iIGZvbnQtc2l6ZT0iMTEwIj48dGV4dCBhcmlhLWhpZGRlbj0idHJ1ZSIgeD0iMjg1IiB5PSIxNTAiIGZpbGw9IiMwMTAxMDEiIGZpbGwtb3BhY2l0eT0iLjMiIHRyYW5zZm9ybT0ic2NhbGUoLjEpIiB0ZXh0TGVuZ3RoPSI0NTAiPmxpZmVjeWNsZTwvdGV4dD48dGV4dCB4PSIyODUiIHk9IjE0MCIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIGZpbGw9IiNmZmYiIHRleHRMZW5ndGg9IjQ1MCI+bGlmZWN5Y2xlPC90ZXh0Pjx0ZXh0IGFyaWEtaGlkZGVuPSJ0cnVlIiB4PSI5NTUiIHk9IjE1MCIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyIgdHJhbnNmb3JtPSJzY2FsZSguMSkiIHRleHRMZW5ndGg9IjczMCI+ZXhwZXJpbWVudGFsPC90ZXh0Pjx0ZXh0IHg9Ijk1NSIgeT0iMTQwIiB0cmFuc2Zvcm09InNjYWxlKC4xKSIgZmlsbD0iI2ZmZiIgdGV4dExlbmd0aD0iNzMwIj5leHBlcmltZW50YWw8L3RleHQ+PC9nPjwvc3ZnPg==" alt="Lifecycle: experimental" /></a> <a href="https://CRAN.R-project.org/package=contentid"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCI+CiAgPGxpbmVhckdyYWRpZW50IGlkPSJiIiB4Mj0iMCIgeTI9IjEwMCUiPgogICAgPHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjYmJiIiBzdG9wLW9wYWNpdHk9Ii4xIi8+CiAgICA8c3RvcCBvZmZzZXQ9IjEiIHN0b3Atb3BhY2l0eT0iLjEiLz4KICA8L2xpbmVhckdyYWRpZW50PgogIDxtYXNrIGlkPSJhIj4KICAgIDxyZWN0IHdpZHRoPSI4NSIgaGVpZ2h0PSIyMCIgcng9IjMiIGZpbGw9IiNmZmYiLz4KICA8L21hc2s+CiAgPGcgbWFzaz0idXJsKCNhKSI+CiAgICA8cGF0aCBmaWxsPSIjNTU1IiBkPSJNMCAwaDQzdjIwSDB6Ii8+CiAgICA8cGF0aCBmaWxsPSIjNGMxIiBkPSJNNDMgMGg2M3YyMEg0M3oiLz4KICAgIDxwYXRoIGZpbGw9InVybCgjYikiIGQ9Ik0wIDBoODV2MjBIMHoiLz4KICA8L2c+CiAgPGcgZmlsbD0iI2ZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIKICAgICBmb250LWZhbWlseT0iRGVqYVZ1IFNhbnMsVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICA8dGV4dCB4PSIyMS41IiB5PSIxNSIgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgIENSQU4KICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjIxLjUiIHk9IjE0Ij4KICAgICAgQ1JBTgogICAgPC90ZXh0PgogICAgPHRleHQgeD0iNjMiIHk9IjE1IiBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgMC4wLjYKICAgIDwvdGV4dD4KICAgIDx0ZXh0IHg9IjYzIiB5PSIxNCI+CiAgICAgIDAuMC42CiAgICA8L3RleHQ+CiAgPC9nPgo8L3N2Zz4=" alt="CRAN status" /></a> <a href="https://github.com/cboettig/contentid/actions"><img src="data:image/svg+xml; charset=utf-8;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxNTIiIGhlaWdodD0iMjAiPgogIDxkZWZzPgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJ3b3JrZmxvdy1maWxsIiB4MT0iNTAlIiB5MT0iMCUiIHgyPSI1MCUiIHkyPSIxMDAlIj4KICAgICAgPHN0b3Agc3RvcC1jb2xvcj0iIzQ0NEQ1NiIgb2Zmc2V0PSIwJSI+PC9zdG9wPgogICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMjQyOTJFIiBvZmZzZXQ9IjEwMCUiPjwvc3RvcD4KICAgIDwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9InN0YXRlLWZpbGwiIHgxPSI1MCUiIHkxPSIwJSIgeDI9IjUwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBzdG9wLWNvbG9yPSIjMzREMDU4IiBvZmZzZXQ9IjAlIj48L3N0b3A+CiAgICAgIDxzdG9wIHN0b3AtY29sb3I9IiMyOEE3NDUiIG9mZnNldD0iMTAwJSI+PC9zdG9wPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgPGcgZmlsbD0ibm9uZSIgZmlsbC1ydWxlPSJldmVub2RkIj4KICAgIDxnIGZvbnQtZmFtaWx5PSImIzM5O0RlamFWdSBTYW5zJiMzOTssVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgIDxwYXRoIGlkPSJ3b3JrZmxvdy1iZyIgZD0iTTAsMyBDMCwxLjM0MzEgMS4zNTUyLDAgMy4wMjcwMjcwMywwIEwxMDIsMCBMMTAyLDIwIEwzLjAyNzAyNzAzLDIwIEMxLjM1NTIsMjAgMCwxOC42NTY5IDAsMTcgTDAsMyBaIiBmaWxsPSJ1cmwoI3dvcmtmbG93LWZpbGwpIiBmaWxsLXJ1bGU9Im5vbnplcm8iPjwvcGF0aD4KICAgICAgPHRleHQgZmlsbD0iIzAxMDEwMSIgZmlsbC1vcGFjaXR5PSIuMyI+CiAgICAgICAgPHRzcGFuIHg9IjIyLjE5ODE5ODIiIHk9IjE1Ij5SLUNNRC1jaGVjazwvdHNwYW4+CiAgICAgIDwvdGV4dD4KICAgICAgPHRleHQgZmlsbD0iI0ZGRkZGRiI+CiAgICAgICAgPHRzcGFuIHg9IjIyLjE5ODE5ODIiIHk9IjE0Ij5SLUNNRC1jaGVjazwvdHNwYW4+CiAgICAgIDwvdGV4dD4KICAgIDwvZz4KICAgIDxnIHRyYW5zZm9ybT0idHJhbnNsYXRlKDEwMikiIGZvbnQtZmFtaWx5PSImIzM5O0RlamFWdSBTYW5zJiMzOTssVmVyZGFuYSxHZW5ldmEsc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxMSI+CiAgICAgIDxwYXRoIGQ9Ik0wIDBoNDYuOTM5QzQ4LjYyOSAwIDUwIDEuMzQzIDUwIDN2MTRjMCAxLjY1Ny0xLjM3IDMtMy4wNjEgM0gwVjB6IiBpZD0ic3RhdGUtYmciIGZpbGw9InVybCgjc3RhdGUtZmlsbCkiIGZpbGwtcnVsZT0ibm9uemVybyI+PC9wYXRoPgogICAgICA8dGV4dCBmaWxsPSIjMDEwMTAxIiBmaWxsLW9wYWNpdHk9Ii4zIj4KICAgICAgICA8dHNwYW4geD0iNCIgeT0iMTUiPnBhc3Npbmc8L3RzcGFuPgogICAgICA8L3RleHQ+CiAgICAgIDx0ZXh0IGZpbGw9IiNGRkZGRkYiPgogICAgICAgIDx0c3BhbiB4PSI0IiB5PSIxNCI+cGFzc2luZzwvdHNwYW4+CiAgICAgIDwvdGV4dD4KICAgIDwvZz4KICAgIDxwYXRoIGZpbGw9IiM5NTlEQTUiIGQ9Ik0xMSAzYy0zLjg2OCAwLTcgMy4xMzItNyA3YTYuOTk2IDYuOTk2IDAgMCAwIDQuNzg2IDYuNjQxYy4zNS4wNjIuNDgyLS4xNDguNDgyLS4zMzIgMC0uMTY2LS4wMS0uNzE4LS4wMS0xLjMwNC0xLjc1OC4zMjQtMi4yMTMtLjQyOS0yLjM1My0uODIyLS4wNzktLjIwMi0uNDItLjgyMy0uNzE3LS45OS0uMjQ1LS4xMy0uNTk1LS40NTQtLjAxLS40NjMuNTUyLS4wMDkuOTQ2LjUwOCAxLjA3Ny43MTguNjMgMS4wNTggMS42MzYuNzYgMi4wMzkuNTc3LjA2MS0uNDU1LjI0NS0uNzYxLjQ0Ni0uOTM2LTEuNTU3LS4xNzUtMy4xODUtLjc3OS0zLjE4NS0zLjQ1NiAwLS43NjIuMjcxLTEuMzkyLjcxOC0xLjg4Mi0uMDctLjE3NS0uMzE1LS44OTIuMDctMS44NTUgMCAwIC41ODYtLjE4MyAxLjkyNS43MThhNi41IDYuNSAwIDAgMSAxLjc1LS4yMzYgNi41IDYuNSAwIDAgMSAxLjc1LjIzNmMxLjMzOC0uOTEgMS45MjUtLjcxOCAxLjkyNS0uNzE4LjM4NS45NjMuMTQgMS42OC4wNyAxLjg1NS40NDYuNDkuNzE3IDEuMTEyLjcxNyAxLjg4MiAwIDIuNjg2LTEuNjM2IDMuMjgtMy4xOTQgMy40NTYuMjU0LjIxOS40NzMuNjM5LjQ3MyAxLjI5NSAwIC45MzYtLjAwOSAxLjY4OS0uMDA5IDEuOTI1IDAgLjE4NC4xMzEuNDAyLjQ4MS4zMzJBNy4wMTEgNy4wMTEgMCAwIDAgMTggMTBjMC0zLjg2Ny0zLjEzMy03LTctN3oiPjwvcGF0aD4KICA8L2c+Cjwvc3ZnPgoK" alt="R build status" /></a> <!-- badges: end --></p>
+<p><code>contentid</code> seeks to facilitate reproducible workflows that involve external data files through the use of content identifiers.</p>
+<div id="quick-start" class="section level2">
+<h2>Quick start</h2>
+<p>Install the current development version using:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="co"># install.packages(&quot;remotes&quot;)</span></span>
+<span id="cb1-2"><a href="#cb1-2"></a>remotes<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;cboettig/contentid&quot;</span>)</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a><span class="kw">library</span>(contentid)</span></code></pre></div>
+<p>Instead of reading in data directly from a local file or URL, use <code>register()</code> to register permanent content-based identifiers for your external data file or URL:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="kw">register</span>(<span class="st">&quot;https://knb.ecoinformatics.org/knb/d1/mn/v2/object/ess-dive-457358fdc81d3a5-20180726T203952542&quot;</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="co">#&gt; [1] &quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span></span></code></pre></div>
+<p>Then, <code>resolve()</code> that content-based identifier in your scripts for more reproducible workflow. Optionally, set <code>store=TRUE</code> to enable local caching:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>vostok &lt;-<span class="st"> </span><span class="kw">resolve</span>(<span class="st">&quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span>,</span>
+<span id="cb4-2"><a href="#cb4-2"></a>                  <span class="dt">store =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p><code>resolve</code> will download and cryptographically verify the identifier matches the content, returning a local file path. Use that file path in the of our analysis script, e.g. </p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a>co2 &lt;-<span class="st"> </span><span class="kw">read.table</span>(vostok, </span>
+<span id="cb5-2"><a href="#cb5-2"></a>                  <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;age_ice&quot;</span>, <span class="st">&quot;age_air&quot;</span>, <span class="st">&quot;co2&quot;</span>), <span class="dt">skip =</span> <span class="dv">21</span>)</span></code></pre></div>
+<hr />
+</div>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>R users frequently write scripts which must load data from an external file – a step which increases friction in reuse and creates a common failure point in reproducibility of the analysis later on. Reading a file directly from a URL is often preferable, since we don’t have to worry about distributing the data separately ourselves. For example, an analysis might read in the famous CO2 ice core data directly from ORNL repository:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>co2 &lt;-<span class="st"> </span><span class="kw">read.table</span>(<span class="st">&quot;https://knb.ecoinformatics.org/knb/d1/mn/v2/object/ess-dive-457358fdc81d3a5-20180726T203952542&quot;</span>, </span>
+<span id="cb6-2"><a href="#cb6-2"></a>                  <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;age_ice&quot;</span>, <span class="st">&quot;age_air&quot;</span>, <span class="st">&quot;co2&quot;</span>), <span class="dt">skip =</span> <span class="dv">21</span>)</span></code></pre></div>
+<p>However, we know that data hosted at a given URL could change or disappear, and not all data we want to work with is available at a URL to begin with. Digital Object Identifiers (DOIs) were created to deal with these problems of ‘link rot’. Unfortunately, there is no straight forward and general way to read data directly from a DOI, (which almost always resolves to a human-readable webpage rather than the data itself), often apply to collections of files rather than individual source we want to read in our script, and we must frequently work with data that does not (yet) have a DOI. Registering a DOI for a dataset has gotten easier through repositories with simple APIs like Zenodo and figshare, but this is still an involved process and still leaves us without a mechanism to directly access the data.</p>
+<p><code>contentid</code> offers a complementary approach to addressing this challenge, which will work with data that has (or will later receive) a DOI, but also with arbitrary URLs or with local files. The basic idea is quite similar to referencing data by DOI: we first “register” an identifier, and then we use that identifier to retrieve the data in our scripts:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="kw">register</span>(<span class="st">&quot;https://knb.ecoinformatics.org/knb/d1/mn/v2/object/ess-dive-457358fdc81d3a5-20180726T203952542&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2"></a><span class="co">#&gt; [1] &quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span></span></code></pre></div>
+<p>Registering the data returns an identifier that we can <code>resolve</code> in our scripts to later read in the file:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a>co2_file &lt;-<span class="st"> </span><span class="kw">resolve</span>(<span class="st">&quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span>)</span>
+<span id="cb8-2"><a href="#cb8-2"></a>co2_b &lt;-<span class="st"> </span><span class="kw">read.table</span>(co2_file, </span>
+<span id="cb8-3"><a href="#cb8-3"></a>                    <span class="dt">col.names =</span> <span class="kw">c</span>(<span class="st">&quot;depth&quot;</span>, <span class="st">&quot;age_ice&quot;</span>, <span class="st">&quot;age_air&quot;</span>, <span class="st">&quot;co2&quot;</span>), <span class="dt">skip =</span> <span class="dv">21</span>)</span></code></pre></div>
+<p>Note that we have manually embedded the identifier in our script, rather than automatically passing the identifier returned by <code>register()</code> directly to resolve. The command to <code>register()</code> needs to only be run once, and thus doesn’t need to be embedded in our script (though it is harmless to include it, as it will always return the same identifier unless the data file itself changes).</p>
+<p>We can confirm this is the same data:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="kw">identical</span>(co2, co2_b)</span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co">#&gt; [1] TRUE</span></span></code></pre></div>
+</div>
+<div id="how-this-works" class="section level2">
+<h2>How this works</h2>
+<p>As the identifier (<code>hash://sha256/...</code>) itself suggests, this is merely the SHA-256 hash of the requested file. This means that unless the data at that URL changes, we will always get that same identifier back when we register that file. If we have a copy of that data someplace else, we can verify it is indeed precisely the same data. For instance, <code>contentid</code> includes a copy of this file as well. Registering the local copy verifies that it indeed has the same hash:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>co2_file_c &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">&quot;vostok.icecore.co2&quot;</span>, <span class="dt">package =</span> <span class="st">&quot;contentid&quot;</span>)</span>
+<span id="cb10-2"><a href="#cb10-2"></a><span class="kw">register</span>(co2_file_c)</span>
+<span id="cb10-3"><a href="#cb10-3"></a><span class="co">#&gt; [1] &quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span></span></code></pre></div>
+<p>We have now registered the same content at two locations: a URL and a local file path. <code>resolve()</code> will use this registry information to access the requested content. <code>resolve()</code> will choose a local path first, allowing us to avoid re-downloading any content we already have. <code>resolve()</code> will verify the content of any local file or file downloaded from a URL matches the requested content hash before returning the path. If the file has been altered in any way, the hash will no longer match and <code>resolve()</code> will try the next source.</p>
+<p>We can get a better sense of this process by querying for all available sources for our requested content:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="kw">query_sources</span>(<span class="st">&quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span>)</span>
+<span id="cb11-2"><a href="#cb11-2"></a><span class="co">#&gt;                                                                                                                            source                date</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a><span class="co">#&gt; 1                                                      /home/rstudio/Documents/cboettig/contentid/inst/extdata/vostok.icecore.co2 2020-09-03 17:21:57</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a><span class="co">#&gt; 2                                     /tmp/RtmpwjqAWu/data/94/12/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37 2020-09-03 16:57:24</span></span>
+<span id="cb11-5"><a href="#cb11-5"></a><span class="co">#&gt; 3 https://archive.softwareheritage.org/api/1/content/sha256:9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37/raw/ 2020-09-03 17:21:58</span></span>
+<span id="cb11-6"><a href="#cb11-6"></a><span class="co">#&gt; 4                                  https://knb.ecoinformatics.org/knb/d1/mn/v2/object/ess-dive-457358fdc81d3a5-20180726T203952542 2020-09-03 17:21:51</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a><span class="co">#&gt; 5                               https://knb.ecoinformatics.org/knb/d1/mn/v2/object/ess-dive-f8d52384ece0ba9-20180716T154049822990 2020-08-10 00:09:02</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a><span class="co">#&gt; 6                                          https://github.com/espm-157/climate-template/releases/download/data/vostok.icecore.co2 2020-08-04 18:25:50</span></span>
+<span id="cb11-9"><a href="#cb11-9"></a><span class="co">#&gt; 7                                             https://cn.dataone.org/cn/v2/resolve/ess-dive-0462dff585f94f8-20180716T160600643874 2020-08-01 00:01:40</span></span>
+<span id="cb11-10"><a href="#cb11-10"></a><span class="co">#&gt; 8                                                                https://cdiac.ess-dive.lbl.gov/ftp/trends/co2/vostok.icecore.co2 2020-07-31 21:05:59</span></span></code></pre></div>
+<p>Note that <code>query_sources()</code> has found more locations than we have registered above. This is because in addition to maintaining a local registry of sources, <code>contentid</code> registers online sources with the Hash Archive, <a href="https://hash-archive.org" class="uri">https://hash-archive.org</a>. (The Hash Archive doesn’t store content, but only a list of public links at which content matching the hash has been seen.) <code>query_sources()</code> has also checked for this content on the Software Heritage Archive, which does periodic crawls of all public content on GitHub which have also picked up a copy of this exact file. With each URL is a date at which it was last seen - repeated calls to <code>register()</code> will update this date, or lead to a source being deprecated for this content if the content it serves no longer matches the requested hash. We can view the history of all registrations of a given source using <code>query_history()</code>.</p>
+<p>This approach can also be used with local or unpublished data. <code>register()</code>ing a local file only creates an entry in <code>contentid</code>’s local registry, so this does not provide a backup copy of the data or a mechanism to distribute it to collaborators. But it does provide a check that the data has not accidentally changed on our disk. If we move the data or eventually publish the data, we have only to register these new locations and we never need to update a script that accesses the data using calls to <code>resolve()</code> like <code>read.table(resolve(&quot;hash://sha256/xxx...&quot;))</code> rather than using local file names.</p>
+<p>If we prefer to keep a local copy of a specific dataset around, (e.g. for data that is used frequently or used across multiple projects), we can instruct <code>resolve()</code> to store a persistent copy in <code>contentid</code>’s local storage:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a>co2_file &lt;-<span class="st"> </span><span class="kw">resolve</span>(<span class="st">&quot;hash://sha256/9412325831dab22aeebdd674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37&quot;</span>, </span>
+<span id="cb12-2"><a href="#cb12-2"></a>                    <span class="dt">store =</span> <span class="ot">TRUE</span>)</span></code></pre></div>
+<p>Any future calls to <code>resolve()</code> with this hash on this machine will then always be able to load the content from the local store. This provides a convenient way to cache downloads for future use. Because the local store is based on the content identifier, repeatedly storing the same content will have no effect, and we cannot easily overwrite or accidentally delete this content.</p>
+<p><code>register()</code> and <code>resolve()</code> provide a low-friction mechanism to create a permanent identifier for external files and then resolve that identifier to an appropriate source. This can be useful in scripts that are frequently re-run as a way of caching the download step, and simultaneously helps ensure the script is more reproducible. While this approach is not fail-proof (since all registered locations could fail to produce the content), if all else fails our script itself still contains a cryptographic fingerprint of the data we could use to verify if a given file was really the one used.</p>
+</div>
+<div id="acknowledgements" class="section level2">
+<h2>Acknowledgements</h2>
+<p><code>contentid</code> is largely based on the design and implementation of <a href="https://hash-archive.org" class="uri">https://hash-archive.org</a>, and can interface with the <a href="https://hash-archive.org" class="uri">https://hash-archive.org</a> API or mimic it locally. <code>contentid</code> also draws inspiration from <a href="https://github.com/bio-guoda/preston">Preston</a>, a biodiversity dataset tracker, and <a href="https://github.com/globalbioticinteractions/elton">Elton</a>, a command-line tool to update/clone, review and index existing species interaction datasets.</p>
+<p>This work is funded in part by grant <a href="https://www.nsf.gov/awardsearch/showAward?AWD_ID=1839201&amp;HistoricalAwards=false">NSF OAC 1839201</a> from the National Science Foundation.</p>
+</div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
