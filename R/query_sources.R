@@ -27,69 +27,93 @@ query_sources <- function(id,
                           cols = c("source", "date"), 
                           ...){
   
-  ha_out <- NULL
-  tsv_out <- NULL
-  lmdb_out <- NULL
-  store_out <- NULL
-  swh_out <- NULL
+  registries <- expand_registry_urls(registries)
+  types <- detect_registry_type(registries)
   
-  if(curl::has_internet()){
-    ## Remote hash-archive.org type registries
-    if (any(grepl("hash-archive.org", registries))){
-      remote <- registries[grepl("hash-archive.org", registries)]
-      ha_out <- lapply(remote, function(host) sources_ha(id, host = host))
-      ha_out <- do.call(rbind, ha_out)
-    }
-    
-    if (any(grepl("softwareheritage.org", registries))){
-      remote <- registries[grepl("softwareheritage.org", registries)]
-      ## Note: vectorization is unnecessary here. 
-      ## error handling to avoid failure if SWH call fails
-      swh_out <- tryCatch(
-        sources_swh(id, host = remote),
-        error = function(e) warning(e),
-        finally = NULL
-        )
-    }
-  }
+
+  ## Call sources_fn on each recognized registry type
+  out <- lapply(types, function(type){
+    active_registries <- registries[types == type]
+    generic_source(id, registries = active_registries, type = type)
+  })
+  out <- do.call(rbind, out)
   
-  ## Local, tsv-backed registries
-  if(any(is_path_tsv(registries))){
-    local <- registries[is_path_tsv(registries)]
-    tsv_out <- lapply(local, function(tsv) sources_tsv(id, tsv))
-    tsv_out <- do.call(rbind, tsv_out)
-  }
-  
-  ## Local, LMDB-backed registries
-  if(any(is(registries, "mdb_env"))){
-    local <- registries[is(registries, "mdb_env")]
-    lmdb_out <- lapply(local, function(lmdb) sources_lmdb(id, lmdb))
-    lmdb_out <- do.call(rbind, lmdb_out)
-  }
-  
-  
-  ## local stores are automatically registries as well
-  if(any(dir.exists(registries))){
-    stores <- registries[dir.exists(registries)]
-    store_out <- lapply(stores, function(dir) sources_store(id, dir = dir))
-    store_out <- do.call(rbind, store_out)
-  }
-  
-  ## format return to show only most recent
-  out <- rbind(ha_out, store_out, tsv_out, swh_out, lmdb_out)
+  # filter out:
+  # - duplicate id-source pairs, 
+  # - any urls later seen with different content
+  # - sort by local-first, then by date
   filter_sources(out, registries, cols)
 
 }
 
+## Map (closure) to select the sources_* function for the type
+known_sources <- function(type){ 
+  switch(type,
+         "hash-archive" = sources_ha,
+         "dataone" = sources_dataone,
+         "zenodo" = sources_zenodo,
+         "softwareheritage" = sources_swh,
+         "tsv" = sources_tsv,
+         "lmdb" = sources_lmdb,
+         "content_store" = sources_store,
+         function(id, host) NULL
+  )
+}
+## Try known sources of a given type
+## lapply+rbind to support, e.g. two .tsv registries (same type)
+generic_source <- function(id, registries, type){
+  out <- lapply(registries, 
+                function(host){
+                  tryCatch(known_sources(type)(id, host),
+                           error = function(e) warning(e),
+                           finally = NULL)
+                })
+  do.call(rbind,out)
+}
 
+
+
+## Map short names into recognized URL endpoints
+expand_registry_urls <- function(registries) {
+  registries[grepl("^dataone$", registries)] <- "https://cn.dataone.org"
+  registries[grepl("^hash-archive$", registries)] <- "https://hash-archive.org"
+  registries[grepl("softwareheritage", registries)] <- "https://archive.softwareheritage.org"
+  registries[grepl("zenodo", registries)] <- "https://zenodo.org"
+  registries
+}
+## Map URLs and paths to corresponding short names
+detect_registry_type <- function(registries) {
+  registries[grepl("dataone", registries)] <- "dataone"
+  registries[grepl("hash-archive", registries)] <- "hash-archive"
+  registries[grepl("softwareheritage", registries)] <- "softwareheritage"
+  registries[grepl("zenodo", registries)] <- "zenodo"
+  registries[is_path_tsv(registries)] <- "tsv"
+  registries[is(registries, "mdb_env")] <- "lmdb"
+  registries[dir.exists(registries)] <- "content_store"
+  registries
+}
+
+
+
+# For a single identifier, some registries (tsv and hash-archive) can contain
+# many entries resolving that same ID to the same URL (on different dates -- i.e.
+# different "sightings" of the data at the same spot.)  We only want the most recent.
+# 
+# Some registries (tsv and hash-archive) will report URLs which are later observed
+# to be failing (i.e. have different content or error msg).  Checking query_history
+# on the URL first confirms if the URL still contains the desired content.  
+#
+# Lastly, we want to sort local matches first, and then sort by date of most recent first
+# 
 filter_sources <- function(df, 
                            registries = default_registries(), 
-                           cols = c("source", "date")
+                           col = c("source", "date")
                            ){
   
   if(is.null(df)) return(df)
   
   id_sources <- most_recent_sources(df)
+  
   
   ## Now, check history for all these URLs and see if the content is current 
   url_sources <- id_sources$source[is_url(id_sources$source)]
@@ -115,7 +139,7 @@ filter_sources <- function(df,
   out <- out[!is.na(out$status), ]
   row.names(out) <- NULL
   
-  out[cols]
+  out[col]
   
 }
 
@@ -139,8 +163,11 @@ most_recent_sources <- function(df){
 
 
 
-
-## could do more native implementation without the bagit-based i/o
-## This reflects that the local store is implicitly a registry
-sources_store <- bagit_query
+sources_store <- function(id, dir = content_dir()){
+  source = content_based_location(id, dir)
+  registry_entry(id = id, 
+                 source = source, 
+                 date = fs::file_info(source)$modification_time
+                 )
+}
 
