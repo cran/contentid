@@ -6,12 +6,14 @@
 
 
 #' List software heritage sources for a content identifier  
-#' @inheritParams query_sources
+#' @inheritParams sources
 #' @param host the domain name for the Software Heritage API
 #' 
 #' @export 
-#' @seealso [query_sources]
-#' @examples \donttest{
+#' @seealso [sources]
+#' @examplesIf has_resource("https://archive.softwareheritage.org")
+#' 
+#'  \donttest{
 #' 
 #' id <- paste0("hash://sha256/9412325831dab22aeebdd",
 #'              "674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37")
@@ -51,18 +53,18 @@ sources_swh <- function(id, host = "https://archive.softwareheritage.org", ...){
 
 #' return the history of archive events of a given software repository
 #' 
-#' Note that unlike the generic [query_history] method, SWH history is repo-specific
+#' Note that unlike the generic [history] method, SWH history is repo-specific
 #' rather than content-specific. An archive event adds all content from the repo 
 #' to the Software Heritage archival snapshot at once.  Any individual file can still
 #' be referenced by its content identifier. 
-#' @seealso [query_history], [store_swh], [sources_swh]
+#' @seealso [history], [store_swh], [sources_swh]
 #' 
 #' @param origin_url The url address to a GitHub, GitLab, or other recognized repository origin
 #' @inheritParams sources_swh
 #  @importFrom jsonlite fromJSON
 #' @export
 #' 
-#' @examples
+#' @examplesIf has_resource(c("https://archive.softwareheritage.org", "https://github.com/CSSEGISandData/COVID-19"))
 #'  
 #' \donttest{
 #' history_swh("https://github.com/CSSEGISandData/COVID-19")
@@ -93,7 +95,7 @@ history_swh <- function(origin_url, host = "https://archive.softwareheritage.org
 #' @inheritParams history_swh
 #' @param type software repository type, i.e. "git", "svn"
 #' @export
-#' @examples
+#' @examplesIf has_resource(c("https://archive.softwareheritage.org", "https://github.com/CSSEGISandData/COVID-19"))
 #'  
 #' \donttest{
 #' store_swh("https://github.com/CSSEGISandData/COVID-19")
@@ -120,7 +122,7 @@ store_swh <- function(origin_url,
 #' @export
 #' 
 #' 
-#' @examples
+#' @examplesIf has_resource("https://archive.softwareheritage.org")
 #' \donttest{
 #' 
 #' id <- paste0("hash://sha256/9412325831dab22aeebdd",

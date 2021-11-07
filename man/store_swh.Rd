@@ -24,9 +24,10 @@ store_swh(
 Add content to the Software Heritage Archival Store
 }
 \examples{
+\dontshow{if (has_resource(c("https://archive.softwareheritage.org", "https://github.com/CSSEGISandData/COVID-19"))) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
  
 \donttest{
 store_swh("https://github.com/CSSEGISandData/COVID-19")
 }
-
+\dontshow{\}) # examplesIf}
 }

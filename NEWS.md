@@ -1,3 +1,23 @@
+# contentid 0.0.14
+
+- all donttest examples set temporary storage instead of trusting
+  that CRAN is setting R_USER_DATA_DIR for `tools::R_user_dir()`
+  to an approriate setting for running donttest examples.
+- Include an additional hash-archive-like registry in `default_registries()` 
+  (https://hash-archive.carlboettiger.info)
+- `default_registries()` is now an exported function.
+- Some edits for robustness: `tsv-backed` registries disable `vroom` altrep,
+(which can create file-lock issues on Windows. Even though altrep reading
+can provide significant speed improvements in this context with a large
+local registry, using LMDB for that case will still be much faster.)
+
+- Minor adjustments to some function names:
+  * `query_sources()` is now renamed `sources()`
+  * `query_history()` is renamed `history_url()`
+  * `query`, `query_sources()`, and ``query_history()` still present but 
+     flagged for deprecation
+  * `pin` still present but marked for deprecation
+
 # contentid 0.0.12
 
 * add `purge_cache()` to easily free space used by contentid

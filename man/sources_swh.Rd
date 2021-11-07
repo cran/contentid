@@ -17,15 +17,17 @@ sources_swh(id, host = "https://archive.softwareheritage.org", ...)
 List software heritage sources for a content identifier
 }
 \examples{
-\donttest{
+\dontshow{if (has_resource("https://archive.softwareheritage.org")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
+
+ \donttest{
 
 id <- paste0("hash://sha256/9412325831dab22aeebdd",
              "674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37")
 sources_swh(id)
 
 }
-
+\dontshow{\}) # examplesIf}
 }
 \seealso{
-\link{query_sources}
+\link{sources}
 }

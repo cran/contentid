@@ -21,16 +21,25 @@ REMOTES <- c("hash-archive", "softwareheritage", "dataone", "zenodo")
 #' 
 #' @export
 #' @importFrom curl has_internet
-#' @examples
+#' @aliases sources, query_sources
+#' @examplesIf interactive()
+#' 
+#' \dontshow{ ## Real users won't use a temporary dir
+#' Sys.setenv("CONTENTID_REGISTRIES" = tempdir())
+#' Sys.setenv("CONTENTID_HOME" = tempdir())
+#' }
 #' \donttest{
 #'
 #' id <- paste0("hash://sha256/9412325831dab22aeebdd",
 #'              "674b6eb53ba6b7bdd04bb99a4dbb21ddff646287e37")
-#' query_sources(id)
+#' sources(id)
 #' 
 #' }
-#'
-query_sources <- function(id, 
+#' \dontshow{ ## Real users won't use a temporary dir
+#' Sys.unsetenv("CONTENTID_REGISTRIES")
+#' Sys.unsetenv("CONTENTID_HOME")
+#' }
+sources <- function(id, 
                           registries = default_registries(),
                           cols = c("source", "date"), 
                           all = TRUE,
@@ -62,6 +71,7 @@ query_sources <- function(id,
   filter_sources(out, registries, cols)
 }
 
+query_sources <- sources
 
 ## Map (closure) to select the sources_* function for the type
 known_sources <- function(type){ 
