@@ -184,7 +184,8 @@ most_recent_sources <- function(df){
   
   out <- registry_entry(id = reg$identifier[[1]], 
                         source = unique_sources, 
-                        date = as.POSIXct(NA))
+                        date = as.POSIXct(NA),
+                        size = NA_integer_)
   
   for(i in seq_along(unique_sources)){
     out[i,] <- reg[reg$source == unique_sources[i], ][1,]
@@ -193,13 +194,16 @@ most_recent_sources <- function(df){
 }
 
 
-
+## Note that this requires computing file size and file modification time
+## needless delay
 sources_store <- function(id, dir = content_dir()){
   source = content_based_location(id, dir)
   if(file.exists(source)){
+    info <- fs::file_info(source)
     registry_entry(id = id, 
                    source = source, 
-                   date = fs::file_info(source)$modification_time
+                   date = info$modification_time,
+                   size = info$size
                    )
   } else {
     registry_entry(id = id, status=404)

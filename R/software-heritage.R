@@ -11,7 +11,7 @@
 #' 
 #' @export 
 #' @seealso [sources]
-#' @examplesIf has_resource("https://archive.softwareheritage.org")
+#' @examplesIf interactive()
 #' 
 #'  \donttest{
 #' 
@@ -36,13 +36,20 @@ sources_swh <- function(id, host = "https://archive.softwareheritage.org", ...){
   endpoint <- "/api/1/content/sha256:"
   hash <- strip_prefix(id)
   query <- paste0(host, endpoint, hash)
-  response <- httr::GET(query)
-  #httr::stop_for_status(resp)
-  result <- httr::content(response, "parsed", "application/json")
   
-  if(httr::status_code(response) != 200)
+  response <- tryCatch({
+    response <- httr::GET(query)
+    },
+    error = function(e){
+      message(e)
+      list()
+    },
+    finally = list()
+  )
+  if(length(response) == 0 || httr::status_code(response) != 200)
    return( null_query() )
   
+  result <- httr::content(response, "parsed", "application/json")
   registry_entry(id, 
                  source = result$data_url,
                  date = Sys.time()
@@ -64,8 +71,7 @@ sources_swh <- function(id, host = "https://archive.softwareheritage.org", ...){
 #  @importFrom jsonlite fromJSON
 #' @export
 #' 
-#' @examplesIf has_resource(c("https://archive.softwareheritage.org", "https://github.com/CSSEGISandData/COVID-19"))
-#'  
+#' @examplesIf interactive()
 #' \donttest{
 #' history_swh("https://github.com/CSSEGISandData/COVID-19")
 #' }
@@ -95,8 +101,7 @@ history_swh <- function(origin_url, host = "https://archive.softwareheritage.org
 #' @inheritParams history_swh
 #' @param type software repository type, i.e. "git", "svn"
 #' @export
-#' @examplesIf has_resource(c("https://archive.softwareheritage.org", "https://github.com/CSSEGISandData/COVID-19"))
-#'  
+#' @examplesIf interactive()
 #' \donttest{
 #' store_swh("https://github.com/CSSEGISandData/COVID-19")
 #' }
@@ -122,7 +127,7 @@ store_swh <- function(origin_url,
 #' @export
 #' 
 #' 
-#' @examplesIf has_resource("https://archive.softwareheritage.org")
+#' @examplesIf interactive()
 #' \donttest{
 #' 
 #' id <- paste0("hash://sha256/9412325831dab22aeebdd",

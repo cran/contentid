@@ -59,6 +59,9 @@ resolve <- function(id,
   
   path <- attempt_source(df, verify = verify)
   
+  if(valid_store_path(id, path)){
+    store <- FALSE # No need to rehash valid store
+  }
   if(store){
     algo <- extract_algo(id)
     id_sha256 <- store(path, dir = dir, algos = algo)
@@ -73,6 +76,9 @@ resolve <- function(id,
   path
 }
 
+valid_store_path <- function(id, path){
+  basename(path) == basename(id)
+}
 
 attempt_source <- function(entries, verify = TRUE) {
   N <- dim(entries)[1]
@@ -94,7 +100,13 @@ attempt_source <- function(entries, verify = TRUE) {
       next
     }
 
-    ##
+    ##  Skip re-hashing of content-store-sources
+    if (valid_store_path(entries$identifier[[i]],
+                        entries$source[[i]])
+        ) {
+      verify = FALSE
+    } 
+    
     if (verify) {
         algo <- sub(hashuri_regex, "\\1", entries[i, "identifier"])
         ## verification is always sha256-based.  
