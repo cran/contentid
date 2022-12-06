@@ -1,5 +1,5 @@
 Package: contentid
-Version: 0.0.15
+Version: 0.0.16
 Title: An Interface for Content-Based Identifiers
 Description: An interface for creating, registering, and resolving content-based
              identifiers for data management. Content-based identifiers rely on
@@ -28,15 +28,15 @@ Language: en-US
 URL: https://github.com/cboettig/contentid
 BugReports: https://github.com/cboettig/contentid/issues
 Imports: openssl (>= 1.4.2), httr, curl, fs, tools, methods
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 Suggests: knitr, rmarkdown, testthat, covr, thor, vroom, spelling
 VignetteBuilder: knitr
 NeedsCompilation: no
-Packaged: 2021-11-28 05:59:44 UTC; rocker
+Packaged: 2022-12-06 04:29:30 UTC; cboettig
 Author: Carl Boettiger [aut, cre] (<https://orcid.org/0000-0002-1642-628X>),
   Jorrit Poelen [aut] (<https://orcid.org/0000-0003-3138-4118>),
   NSF OAC 1839201 [fnd]
     (https://www.nsf.gov/awardsearch/showAward?AWD_ID=1839201)
 Maintainer: Carl Boettiger <cboettig@gmail.com>
 Repository: CRAN
-Date/Publication: 2021-11-29 05:50:04 UTC
+Date/Publication: 2022-12-07 00:40:02 UTC

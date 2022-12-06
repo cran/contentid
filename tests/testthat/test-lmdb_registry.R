@@ -1,9 +1,8 @@
-context("lmdb registry")
-
 
 
 test_that("init_lmdb()", {
   
+  options(thor_mapsize=1e6)
   skip_on_os("solaris")
   skip_if_not_installed("thor")
   
@@ -26,7 +25,7 @@ test_that("register_lmdb()", {
   )  
   
   db_dir <- tempfile()
-  db <- init_lmdb(db_dir)
+  db <- default_lmdb(db_dir)
   
   
   id <- register_lmdb(ex, db)
