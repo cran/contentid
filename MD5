@@ -1,7 +1,7 @@
-e4a99146af2e95801fcdc9c5f6cc2261 *DESCRIPTION
+bd68417630509ac464aeb4673819a354 *DESCRIPTION
 365ba699194b55db5c011186d3491df0 *LICENSE
 b920362a6299d940a1240ba448511796 *NAMESPACE
-87d608f719fc003819f17725e178f22a *NEWS.md
+747d20da3f84ae2c19e4c387855ab80a *NEWS.md
 4ea97422db83f49718a8cff5570d2874 *R/bagit.R
 216c22cfba3b95cb46e0098c807fc006 *R/content_dir.R
 5b20365c63d3c668ad76ce12d02b4717 *R/content_id.R
@@ -25,12 +25,12 @@ a57b95f3f41a8f325718774e7f7cd64b *R/sources.R
 8f156fa588534550397c4518a7921088 *R/swh_ratelimit.R
 297a60d810b7c83941438cb91e0031ce *R/tsv_registry.R
 ed8a0893082c7a92c779a93700e5ad9c *R/utils.R
-a4ad0de2f3c42cc23d4e21b307cbbb45 *R/zenodo_registry.R
+11079071d85de372c54046418951460f *R/zenodo_registry.R
 f28a190c0fd0b455b92de13bca2654db *README.md
-3eada4c785732a54b0873080a23bbd94 *build/vignette.rds
+b6a68b81c16f34709573cd513cb07897 *build/vignette.rds
 d02691670d64c6372f201105b30b731a *inst/WORDLIST
 978f0c07ffb37e7a474aca389969fdd2 *inst/doc/intro.Rmd
-2b36c348ddbacd9a51944ba650a3650f *inst/doc/intro.html
+34eb37bc3e0498f913e0c6cda3644fc5 *inst/doc/intro.html
 549c4581ad0974545fb557a50b456e19 *inst/examples/benchmarking-backends.Rmd
 4e12a3b84e964bfa9a2ba694a38d3cc2 *inst/examples/benchmarking-backends.md
 30fa2cf0e474894d9668d1f7d2faca68 *inst/examples/benchmarks.Rmd
